@@ -70,9 +70,11 @@ void testPointer() {
 
     printf("i 的地址：%#x\n", &i);
     printf("i 的地址：%#x\n", p);//p 变量中存的是 i 的地址
+    printf("p 的地址：%#x\n", &p);
     printf("i 的值：%d\n", *p);//用一元运算符 * 来返回 p 变量存的地址的变量的值，即 i 的值
     //i 的地址：0x55d1674c
     //i 的地址：0x55d1674c
+    //p 的地址：0x5e5d2740
     //i 的值：50
 
     /*指针变量的强大之处就在于，他能通过内存地址去操作对应内存地址的内容*/
@@ -82,31 +84,69 @@ void testPointer() {
 
 }
 
-void testArr() {
-    int arr[] = {89, 20, 13, 45, 68};
+/*指针变量也是变量，所以指针也是可以运算的*/
+void testPointerVariable() {
+    int arr[] = {75, 40, 25, 80};
 
     printf("数组的地址：%#x\n", &arr);
     printf("这样得到数组的地址：%#x\n", arr);
     printf("第一个元素的地址：%#x\n", &arr[0]);
+    printf("数组的值：%d\n", arr);
+    printf("第一个元素的值：%d\n", *arr);
+    //数组的地址：0x55b89730
+    //这样得到数组的地址：0x55b89730
+    //第一个元素的地址：0x55b89730
+    //数组的值：1438160688
+    //第一个元素的值：75
 
-    int *pInt = arr;
-//    char *pInt = arr;
+    /*0x55b89730 转为十进制为 1438160688，且*arr返回的是第一个元素的值，*/
+    /*所以数组类型的变量，存储就是首个元素的地址*/
 
-    for (int i = 0; i < 5; ++i) {
-        printf("数组元素：%d\n", arr[i]);
+    printf("=============\n");
+
+    for (int i = 0; i < 4; i++) {
+        printf("索引方式取数组元素：%d\n", arr[i]);
     }
 
-    printf("\n");
+    printf("=============\n");
 
-    for (int j = 0; j < 5; ++j) {
-        printf("数组元素：%d\n", *pInt);
+    int *pInt = arr;
+    for (int j = 0; j < 4; j++) {
+        printf("指针方式取数组元素：%d\n", *pInt);
         pInt++;
     }
 
+    //索引方式取数组元素：75
+    //索引方式取数组元素：40
+    //索引方式取数组元素：25
+    //索引方式取数组元素：80
+    //=============
+    //指针方式取数组元素：75
+    //指针方式取数组元素：40
+    //指针方式取数组元素：25
+    //指针方式取数组元素：80
+
+    /*通过指针变量 pInt 自增的方式，打印出了数组各元素的值，不难发现数组是*/
+    /*用一段连续的内存空间存储数据，我们可以用同类型的指针，通过运算来直接操作内存*/
+    /*注意：指针类型需要跟数组类型一致，在CLion编辑器下，两类型不一致时会报错，如：*/
+    /*incompatible pointer types 'float *' and 'int[4]'*/
+
 }
 
+
+/*
+ * C语言的函数定义和Java的函数定义类似，只是没有 public ，private 等这样的权限控制
+ *
+ * 返回值类型 函数名(参数类型 参数名称, ...){
+ *      函数体
+ * }
+ */
 int add(int num1, int num2) {
     return num1 + num2;
+}
+
+void testFunc() {
+
 }
 
 int minus(int num1, int num2) {
@@ -574,9 +614,9 @@ int main() {
 
 //    testBasicType();
 
-    testPointer();
+//    testPointer();
 
-//    testArr();
+    testPointerVariable();
 
 //    printf("res:%d", add(2, 5));
 
