@@ -145,7 +145,61 @@ int add(int num1, int num2) {
     return num1 + num2;
 }
 
-void testFunc() {
+/*
+ * 通过传入指针类型可以在方法中修改参数原来的值
+ */
+void changeNumByPointer(int *pInt) {
+    printf("形参 pInt 的地址：%#x\n", pInt);
+    *pInt = 90;
+}
+
+/*
+ * 非指针类型的形参，会为 i 变量开辟新的内存空间，所以做不到修改参数原来的值
+ */
+void changeNum(int i) {
+    printf("形参 i 的地址：%#x\n", &i);
+    i = 80;
+}
+
+void testChangeNum() {
+
+    int i = 10;
+    printf("i 原来的值：%d\n", i);
+    printf("i 原来的地址：%#x\n", &i);
+    //i 原来的值：10
+    //i 原来的地址：0x50f548fc
+
+    changeNumByPointer(&i);
+    printf("i 现在的值：%d\n", i);
+    //形参 pInt 的地址：0x50f548fc
+    //i 现在的值：90
+
+    changeNum(i);
+    printf("i 现在的值：%d\n", i);
+    //形参 i 的地址：0x50f548cc
+    //i 现在的值：90
+}
+
+void testSecondaryPointer() {
+
+    int i = 10;
+    int *pInt = &i;//一级地址存 i 的地址
+    int **pInt1 = &pInt;//二级地址存 pInt 的地址
+
+    printf("i 的地址：%#x\n", &i);
+    printf("pInt 的地址：%#x\n", &pInt);
+    printf("用二级指针取 pInt 的地址：%#x\n", pInt1);
+    printf("用二级指针取 i 的地址：%#x\n", *pInt1);
+    printf("用二级指针取 i 的值：%d\n", **pInt1);
+    //i 的地址：0x56d688fc
+    //pInt 的地址：0x56d688f0
+    //用二级指针取 pInt 的地址：0x56d688f0
+    //用二级指针取 i 的地址：0x56d688fc
+    //用二级指针取 i 的值：10
+
+    **pInt1 = 20;
+    printf("用二级指针修改 i 的值：%d\n", i);
+    //用二级指针修改 i 的值：20
 
 }
 
@@ -153,10 +207,6 @@ int minus(int num1, int num2) {
     return num1 - num2;
 }
 
-void testChangeNum(int *pInt) {
-    printf("传入的地址：%#x\n", pInt);
-    *pInt = 300;
-}
 
 void testPointers() {
     int i = 10;
@@ -616,7 +666,11 @@ int main() {
 
 //    testPointer();
 
-    testPointerVariable();
+//    testPointerVariable();
+
+//    testChangeNum();
+
+    testSecondaryPointer();
 
 //    printf("res:%d", add(2, 5));
 
