@@ -1,5 +1,4 @@
 #include <iostream>
-#include <unistd.h>
 
 void testBasicType() {
 
@@ -203,83 +202,96 @@ void testSecondaryPointer() {
 
 }
 
+void logcat() {
+    printf("随便打印一下..\n");
+}
+
+void testFuncPointer() {
+    //函数指针定义：返回值类型 (函数指针)(函数参数) = 函数地址
+    void (*pFunc)() = &logcat;
+
+    pFunc();
+    printf("函数的地址：%#x\n", logcat);
+    printf("函数的地址：%#x\n", &logcat);
+    printf("函数指针的值：%#x\n", pFunc);
+    printf("函数指针的地址：%#x\n", &pFunc);
+    //函数的地址：0xd5754c0
+    //函数的地址：0xd5754c0
+    //函数指针的值：0xd5754c0
+    //函数指针的地址：0x5268b8f8
+}
+
 int minus(int num1, int num2) {
     return num1 - num2;
 }
 
-
-void testPointers() {
-    int i = 10;
-    int *pInt = &i;
-    int **pInt1 = &pInt;
-
-    printf("i 的地址：%#x\n", &i);
-    printf("pint 的地址：%#x\n", &pInt);
-
-    printf("通过pint1 取pint 的地址：%#x\n", pInt1);
-    printf("通过pint1 取i 的地址：%#x\n", *pInt1);
-    printf("通过pint1 取i 的值：%d\n", **pInt1);
-
-    **pInt1 = 200;
-    printf("通过pint1 修改 i 的值：%d\n", i);
-
-}
-
-void testFuncPointer() {
-    int (*pFunc)(int num1, int num2) = &add;
-
-    pFunc(2, 3);
-
-    printf("函数指针值：%#x\n", pFunc);
-    printf("函数指针的地址：%#x\n", &pFunc);
-}
-
-void testFuncPointer1(int(*pFunc)(int, int), int num1, int num2) {
+/*接收 一个返回值为int类型，输入两个int类型参数的函数指针 和 两个int类型参数*/
+void calculate(int(*pFunc)(int, int), int num1, int num2) {
     int i = pFunc(num1, num2);
     printf("计算完成：%d\n", i);
 }
 
-void netCallBack(char *msg) {
+void testFuncPointer1() {
+
+    calculate(&add, 2, 3);
+    //计算完成：5
+    calculate(&minus, 2, 3);
+    //计算完成：-1
+
+}
+
+void callback(char *msg) {
     printf("网络请求回调：%s\n", msg);
-    printf("网络请求回调：%#x\n", msg);
 }
 
 void requestNet(char *url, void(*pCallBack)(char *)) {
-    printf("发起网络请求：%#x\n", url);
-    printf("发起网络请求：%s\n", url);
-    sleep(2);
+    printf("请求url：%s\n", url);
+    sleep(2);//模拟网络耗时
     char *msg = "我是返回的数据";
     pCallBack(msg);
+
+    //请求url：www.baidu.com
+    //网络请求回调：我是返回的数据
 }
 
+void testFuncPointer2() {
+    char *url = "www.baidu.com";
+    requestNet(url, &callback);
+}
+
+/*字符数组*/
 void testCharArray() {
+
     char arr[15] = {'a', 'b', ' ', 'd', 'e'};
-    printf("%s\n", arr);
+    printf("字符数组：%s\n", arr);//用 %s 占位符可将字符数组作为字符串打印出来
+    //字符数组：ab de
 
-    arr[1] = 'Y';
-    printf("修改第二个字符：%s\n", arr);
-
-    printf("数组地址：%#x\n", arr);
-    printf("数组首元素地址：%#x\n", &arr[0]);
+    arr[1] = 'Y';//修改第二个元素
+    printf("修改了第二个字符：%s\n", arr);
+    //修改了第二个字符：aY de
 
 }
 
+/*字符指针*/
 void testCharPointer() {
-    char *s = "Hello World!";
-    printf("内存地址：%#x\n", s);
 
-    char *t = s + 3;
-//    *t = 'P';
-    printf("地址：%#x\n", t);
-    printf("地址：%#x\n", s + 3);
+    char *s = "Hello World!";//是一段连续的内存地址
+    printf("字符指针内存地址：%#x\n", s);//返回的是首个字符 H 的内存地址
+    printf("打印字符串：%s\n", s);
+    //字符指针内存地址：0x7ce4c63
+    //打印字符串：Hello World!
 
-    printf("新字符串：%s\n", s);
+    char *t = s + 4;//这样 t 就指向了首个 o 字符
+    printf("o 字符的地址：%#x\n", t);
+    //o 字符的地址：0x7ce4c67
 
-    s += 2;
+    //截取字符串 llo World!
+    s += 2;//s 指向了首个 l 字符
     while (*s) {
         printf("%c", *s);
         s++;
     }
+    //llo World!
 
 }
 
@@ -670,8 +682,18 @@ int main() {
 
 //    testChangeNum();
 
-    testSecondaryPointer();
+//    testSecondaryPointer();
 
+//    testFuncPointer();
+
+//    testFuncPointer1();
+
+//    testFuncPointer2();
+
+//    testCharArray();
+
+    testCharPointer();
+//====================
 //    printf("res:%d", add(2, 5));
 
 //    int i = 90;
