@@ -362,37 +362,40 @@ void testQueryString() {
     }
 }
 
-void testStrToInt() {
-    char *s = "123";
-    int i = atoi(s);
-
-    printf("%d\n%#x", i + 123, &i);
-}
-
+/*定义一个Person结构体，关键字为struct*/
 struct Person {
     char *name;
     int age;
 };
 
 struct News {
-    char title[128];
+    char title[123];
     char *content;
 };
 
-void testStruct() {
+/*简单使用*/
+void testSimpleStruct() {
+
     struct Person person = {"张三", 25};
-    printf("name:%s\nage:%d\n", person.name, person.age);
+    printf("name:%s ==> age:%d\n", person.name, person.age);
+    //name:张三 ==> age:25
 
     person.name = "Bob";
     person.age = 23;
-    printf("name:%s\nage:%d\n", person.name, person.age);
+    printf("name:%s ==> age:%d\n", person.name, person.age);
+    //name:Bob ==> age:23
 
-    struct News news = {"我是title", "我是内容"};
-
-    printf("title:%s\ncontent:%s\n", news.title, news.content);
+    struct News news;
+    //news.title = "我是新闻标题"; 这是错误的赋值方法！报错为：array is not assignable
+    // 因为 news.title 是数组类型，"我是新闻标题"是 char * 类型
+    strcpy(news.title, "我是新闻标题");//正确的赋值方法
+    news.content = "我是内容";
+    printf("title:%s ==> content:%s\n", news.title, news.content);
+    //title:我是新闻标题 ==> content:我是内容
 
 }
 
+/*定义结构体时，定义它的变量和指针，或其中一个.]。*/
 struct Product {
     char *name;
     char *desc;
@@ -403,7 +406,7 @@ struct {
     int age;
 } *pPerson, person;
 
-void testStruct2() {
+void testSimpleStruct2() {
     product.name = "苹果手机";
     product.desc = "就是贵";
 
@@ -720,7 +723,9 @@ int main() {
 
 //    testQueryChar();
 
-    testQueryString();
+//    testQueryString();
+
+    testSimpleStruct();
 //====================
 //    printf("res:%d", add(2, 5));
 
