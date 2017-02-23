@@ -395,78 +395,93 @@ void testSimpleStruct() {
 
 }
 
-/*定义结构体时，定义它的变量和指针，或其中一个.]。*/
+/*定义结构体时，同时定义一个或多个它的变量或指针。按照属性不能初始化原则，变量或指针都是没有值的*/
 struct Product {
     char *name;
     char *desc;
-} product, *pProduct;
+} product, *pProduct, product1;
 
+/*匿名结构体，可以做单例使用*/
 struct {
     char *name;
     int age;
-} *pPerson, person;
+} *pStudent, student;
 
 void testSimpleStruct2() {
+
     product.name = "苹果手机";
     product.desc = "就是贵";
+    printf("name:%s ==> desc:%s\n", product.name, product.desc);
+    //name:苹果手机 ==> desc:就是贵
 
-    printf("name:%s\n,desc:%s\n", product.name, product.desc);
-    pProduct = &product;
-    printf("name:%s\n,desc:%s\n", (*pProduct).name, pProduct->desc);
+    product1.name = "小米手机";
+    product1.desc = "广告就是多";
+    pProduct = &product1;
+    /*通过指针操作属性，结构体指针使用 p->xx 操作符，相当于 (*p).xx 的简写*/
+    printf("name:%s ==> desc:%s\n", (*pProduct).name, pProduct->desc);
+    //name:小米手机 ==> desc:广告就是多
 
-    pPerson = &person;
-    (*pPerson).name = "张三";
-    pPerson->age = 23;
+    pStudent = &student;
+    (*pStudent).name = "张三";
+    pStudent->age = 23;
+    printf("name:%s ==> age:%d\n", student.name, student.age);
+    //name:张三 ==> age:23
 
-    printf("name:%s\n,age:%d\n", person.name, person.age);
 };
 
 struct ProductBean {
     int total;
-    int status;
+    int state;
 
-    struct Product product1;
+    /*嵌套已定义好的结构体*/
+    struct Product product;
+
+    /*嵌套新声明的结构体*/
+    struct Readme {
+        char *content;
+    } readme;
 };
 
-struct GoodsBean {
-    int total;
-    int status;
+void testSimpleStruct3() {
 
-    struct Goods {
-        char *name;
-        char *desc;
-    } goods;
-};
+    ProductBean pb = {10, 1, {"苹果手机", "就是贵"}, "售出不退"};
+    printf("total:%d ==> state:%d ==> name:%s ==> desc:%s ==> content:%s\n",
+           pb.total, pb.state, pb.product.name, pb.product.desc, pb.readme.content);
+    //total:10 ==> state:1 ==> name:苹果手机 ==> desc:就是贵 ==> content:售出不退
 
-void testStruct3() {
-    GoodsBean gb1 = {10, 1, {"d", "f"}};
-    printf("total:%d\n status:%d\n name:%s\n desc:%s\n", gb1.total, gb1.status, gb1.goods.name, gb1.goods.desc);
-
-    ProductBean pb1 = {20, 44, {"qwe", "asd"}};
+    ProductBean pb1;
     ProductBean *p = &pb1;
-    printf("total:%d\n status:%d\n name:%s\n desc:%s\n", p->total, p->status, p->product1.name, p->product1.desc);
-
-    ProductBean pb2;
-    pb2.total = 11;
-    pb2.status = 22;
-    pb2.product1.name = "jkl";
-    pb2.product1.desc = "io";
-    printf("total:%d\n status:%d\n name:%s\n desc:%s\n", pb2.total, pb2.status, pb2.product1.name, pb2.product1.desc);
+    p->total = 2;
+    p->state = 1;
+    p->product.name = "小米手机";
+    p->product.desc = "就是便宜";
+    p->readme.content = "开机不会爆炸";
+    printf("total:%d ==> state:%d ==> name:%s ==> desc:%s ==> content:%s\n",
+           p->total, p->state, p->product.name, p->product.desc, p->readme.content);
+    //total:2 ==> state:1 ==> name:小米手机 ==> desc:就是便宜 ==> content:开机不会爆炸
 
 };
 
-void testStructArr() {
-    Person ps[] = {{"name1", 11},
-                   {"name2", 12},
-                   {"name3", 21}};
+void testStructArray() {
 
-    int len = sizeof(ps) / sizeof(Person);
+    Person person1 = {"张三", 21};
+    Person person2 = {"李四", 33};
 
-    printf("len:%d\n", len);
+    Person persons[] = {person1, person2, {"赵六", 55}};
 
-    for (Person *p = ps; p < ps + len; p++) {
-        printf("name:%s\n age:%d\n", p->name, p->age);
+    //计算数组长度
+    int len = sizeof(persons) / sizeof(Person);
+    printf("数组长度：%d\n", len);
+    //数组长度：3
+
+    //通过指针遍历数组
+    for (Person *pPerson = persons; pPerson < persons + len; pPerson++) {
+        printf("name:%s ==> age:%d\n", pPerson->name, pPerson->age);
     }
+    //name:张三 ==> age:21
+    //name:李四 ==> age:33
+    //name:赵六 ==> age:55
+
 }
 
 void testStructMalloc() {
@@ -725,7 +740,13 @@ int main() {
 
 //    testQueryString();
 
-    testSimpleStruct();
+//    testSimpleStruct();
+
+//    testSimpleStruct2();
+
+//    testSimpleStruct3();
+
+    testStructArray();
 //====================
 //    printf("res:%d", add(2, 5));
 
