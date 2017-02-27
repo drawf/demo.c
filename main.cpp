@@ -484,19 +484,86 @@ void testStructArray() {
 
 }
 
+void testMalloc() {
+    //静态内存分配创建数组，数组大小是固定的
+    //int i = 10;
+    //int a[i];
+
+    int len = 5;
+    printf("数组的长度：%d\n", len);
+    //数组的长度：5
+
+    //开辟内存，大小为len*4字节，p是数组的首地址，p就是数组的名称
+    int *p = (int *) malloc(len * sizeof(int));
+
+    //给数组元素赋值（使用这一块刚刚开辟出来的连续的内存空间）
+    for (int i = 0; i < len; i++) {
+        p[i] = rand() % 100;
+        printf("数组元素值为：%d ==> 地址为：%#x\n", p[i], &p[i]);
+    }
+    //数组元素值为：7 ==> 地址为：0x8ec02850
+    //数组元素值为：49 ==> 地址为：0x8ec02854
+    //数组元素值为：73 ==> 地址为：0x8ec02858
+    //数组元素值为：58 ==> 地址为：0x8ec0285c
+    //数组元素值为：30 ==> 地址为：0x8ec02860
+
+    int addLen = 5;
+    printf("数组增加的长度：%d\n", addLen);
+    //数组的长度：5
+
+    //新内存大小为(len+addLen)*4字节
+    int *p1 = (int *) realloc(p, (len + addLen) * sizeof(int));
+    if (p1 == NULL) {
+        printf("内存重新分配失败");
+    } else {
+        for (int i = 0; i < len + addLen; i++) {
+            p1[i] = rand() % 100;
+            printf("数组元素值为：%d ==> 地址为：%#x\n", p1[i], &p1[i]);
+        }
+    }
+    //数组元素值为：72 ==> 地址为：0x8ec02850
+    //数组元素值为：44 ==> 地址为：0x8ec02854
+    //数组元素值为：78 ==> 地址为：0x8ec02858
+    //数组元素值为：23 ==> 地址为：0x8ec0285c
+    //数组元素值为：9 ==> 地址为：0x8ec02860
+    //数组元素值为：40 ==> 地址为：0x8ec02864
+    //数组元素值为：65 ==> 地址为：0x8ec02868
+    //数组元素值为：92 ==> 地址为：0x8ec0286c
+    //数组元素值为：42 ==> 地址为：0x8ec02870
+    //数组元素值为：87 ==> 地址为：0x8ec02874
+
+    //手动释放内存，free()释放动态分配的内存空间
+    if (p != NULL) {
+        free(p);
+        p = NULL;
+    }
+
+    if (p1 != NULL) {
+        free(p1);
+        p1 = NULL;
+    }
+
+}
+
 void testStructMalloc() {
 
     Person *person = (Person *) malloc(sizeof(Person) * 5);
     Person *p = person;
-    p->name = "name1";
-    p->age = 11;
+    p->name = "小明";
+    p->age = 17;
     p++;
-    p->name = "name2";
+    p->name = "小李";
     p->age = 22;
+    p++;
+    p->name = "小王吧";
+    p->age = 13;
 
-    for (Person *i = person; i < person + 2; i++) {
-        printf("name:%s\n age:%d\n", i->name, i->age);
+    for (Person *i = person; i < person + 3; i++) {
+        printf("name:%s ==> age:%d\n", i->name, i->age);
     }
+    //name:小明 ==> age:17
+    //name:小李 ==> age:22
+    //name:小王吧 ==> age:13
 
 }
 
@@ -504,18 +571,22 @@ struct Dog {
     char *name;
     int age;
 
+    //结构体中不能有函数实体
     void (*wow)(char *);
 };
 
 void dogWow(char *msg) {
-    printf("dog:%s\n", msg);
+    printf("dog 说:%s\n", msg);
 }
 
 void testDogWow() {
-    Dog dog = {"lite", 3, dogWow};
-    dog.wow("汪汪！");
 
-    printf("%#x\n", dogWow);
+    Dog dog = {"吉娃娃", 2, dogWow};//将函数名称赋值给函数指针
+    dog.wow("汪汪！");
+    printf("函数的地址：%#x\n", dogWow);
+    //dog 说:汪汪！
+    //函数的地址：0xcf56d20
+
 }
 
 typedef char *Name;
@@ -746,7 +817,13 @@ int main() {
 
 //    testSimpleStruct3();
 
-    testStructArray();
+//    testStructArray();
+
+//    testMalloc();
+
+//    testStructMalloc();
+
+    testDogWow();
 //====================
 //    printf("res:%d", add(2, 5));
 
