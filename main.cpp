@@ -589,27 +589,56 @@ void testDogWow() {
 
 }
 
-typedef char *Name;
-typedef struct ImageInfo {
+typedef char *Name;//简单别名
+
+struct ImageInfo {
     char *name;
     int size;
-
     char *path;
 };
 
-void reImageName(ImageInfo *imageInfo_p, char *msg) {
-    imageInfo_p->name = msg;
+typedef ImageInfo aImg;//结构体别名，只是个新名字，不是变量
+
+void reImageName(ImageInfo *pImageInfo, char *msg) {
+    pImageInfo->name = msg;
 }
 
 void testAlias() {
-    Name a = "abcd";
-    printf("%s\n", a);
+    Name a = "小李子";//Name 为 char* 类型
+    printf("Name的值：%s\n", a);
+    //Name的值：小李子
 
-    ImageInfo ii = {"name", 122, "path..."};
-    reImageName(&ii, "abc");
+    aImg img = {"风景图", 122, "我是图片路径"};
+    reImageName(&img, "美女图");
+    printf("name:%s ==> size:%d ==> path:%s\n", img.name, img.size, img.path);
+    //name:美女图 ==> size:122 ==> path:我是图片路径
 
-    printf("name:%s\n size:%d\n path:%s\n", ii.name, ii.size, ii.path);
 }
+
+union mVal {
+    char c;//1 byte
+    short s;//2 byte
+    int i;//4 byte
+    long l;//8 byte
+};
+
+void testUnion() {
+
+    mVal u;
+    u.c = 'd';
+    u.i = 10;//最后一次赋值有效
+
+    printf("char:%c ==> int:%d ==> 大小：%d\n", u.c, u.i, sizeof(u));
+    //char:
+    //==> int:10 ==> 大小：8
+    //u.c的值被损坏了，使用共同体的主要目的是，同一时间只使用一个变量
+
+}
+
+enum NetStatus {
+    NET_SUCCESS,
+    NET_ERROR
+};
 
 void testWriteTextFile() {
     char *path = "/Users/drawf/Desktop/c.txt";
@@ -706,37 +735,6 @@ void testFileSize() {
     fclose(p);
 }
 
-union mVal {
-    int i;
-    short s;
-    long l;
-    char c;
-};
-
-enum NetStatus {
-    NET_SUCCESS,
-    NET_ERROR
-};
-
-void testUnion() {
-    mVal u;
-    u.c = 'd';
-    u.i = 10;
-
-    printf("int:%d\n char:%c\n", u.i, u.c);
-
-    NetStatus n = NET_SUCCESS;
-
-    switch (n) {
-        case NET_SUCCESS:
-            printf("case success");
-            break;
-        case NET_ERROR:
-            break;
-        default:
-            break;
-    }
-}
 
 #define MAX 100
 #define NAME "bob"
@@ -823,7 +821,11 @@ int main() {
 
 //    testStructMalloc();
 
-    testDogWow();
+//    testDogWow();
+
+//    testAlias();
+
+    testUnion();
 //====================
 //    printf("res:%d", add(2, 5));
 
