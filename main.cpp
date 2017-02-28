@@ -635,10 +635,51 @@ void testUnion() {
 
 }
 
+/*枚举，列举所有的情况*/
 enum NetStatus {
+    NET_START,
+    NET_LOADING,
     NET_SUCCESS,
     NET_ERROR
 };
+
+/*模拟网络请求*/
+void httpRequest(char *url, void(*pCallback)(enum NetStatus, char *)) {
+
+    printf("请求地址为：%s\n", url);
+    //请求地址为：http://baidu.com
+
+    pCallback(NET_START, "开始请求网络..");
+    pCallback(NET_LOADING, "加载中..");
+    sleep(2);
+    pCallback(NET_SUCCESS, "请求成功");
+
+}
+
+void httpCallback(enum NetStatus status, char *result) {
+    switch (status) {
+        case NET_START:
+            printf("onStart:%s\n", result);
+            //onStart:开始请求网络..
+            break;
+        case NET_LOADING:
+            printf("loading:%s\n", result);
+            //loading:加载中..
+            break;
+        case NET_SUCCESS:
+            printf("success:%s\n", result);
+            //success:请求成功
+            break;
+        case NET_ERROR:
+            printf("error:%s\n", result);
+            break;
+    }
+
+}
+
+void testEnum() {
+    httpRequest("http://baidu.com", httpCallback);
+}
 
 void testWriteTextFile() {
     char *path = "/Users/drawf/Desktop/c.txt";
@@ -825,7 +866,9 @@ int main() {
 
 //    testAlias();
 
-    testUnion();
+//    testUnion();
+
+    testEnum();
 //====================
 //    printf("res:%d", add(2, 5));
 
