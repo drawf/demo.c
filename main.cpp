@@ -682,112 +682,134 @@ void testEnum() {
 }
 
 void testWriteTextFile() {
-    char *path = "/Users/drawf/Desktop/c.txt";
-    char *content = "我是测试内容，i am test content!";
 
-    FILE *fp = fopen(path, "w");
-    if (fp == NULL) {
-        printf("打开文件失败");
+    char *path = "/Users/drawf/Desktop/test.txt";
+    char *content = "我是测试内容！";
+
+    FILE *pFILE = fopen(path, "w");
+    if (pFILE == NULL) {
+        printf("打开文件失败\n");
         return;
     }
 
-    fputs(content, fp);
-
-    fclose(fp);
+    fputs(content, pFILE);//写入文件
+    fclose(pFILE);//关闭流
+    printf("写入文件测试成功！\n");
+    //写入文件测试成功！
 }
 
 void testReadTextFile() {
-    char *path = "/Users/drawf/Desktop/c.txt";
 
-    FILE *fp = fopen(path, "r");
-    if (fp == NULL) {
+    char *path = "/Users/drawf/Desktop/test.txt";
+
+    FILE *pFILE = fopen(path, "r");
+    if (pFILE == NULL) {
         printf("打开文件失败");
         return;
     }
 
-    char buffer[1024];
-    while (fgets(buffer, 1024, fp)) {
-        printf("%s", buffer);
+    char buffer[1024];//字符缓存区
+    while (fgets(buffer, 1024, pFILE)) {
+        printf("%s\n", buffer);
     }
 
-    fclose(fp);
-
+    fclose(pFILE);
+    printf("读取文件测试成功！\n");
+    //我是测试内容，i am test content!
+    //读取文件测试成功！
 }
 
 void testBinaryFile() {
-    char *currFile = "/Users/drawf/Desktop/c.txt";
-    char *destFile = "/Users/drawf/Desktop/c_copy.txt";
 
-    FILE *currFile_p = fopen(currFile, "rb");
-    FILE *destFile_p = fopen(destFile, "wb");
+    char *currFile = "/Users/drawf/Desktop/test.txt";
+    char *destFile = "/Users/drawf/Desktop/test_copy.txt";
+
+    FILE *pCurrFile = fopen(currFile, "rb");
+    FILE *pDestFile = fopen(destFile, "wb");
 
     int buffer[1024];
     int len;
 
-    while ((len = fread(buffer, sizeof(int), 1024, currFile_p)) != 0) {
-        fwrite(buffer, sizeof(int), len, destFile_p);
+    while ((len = fread(buffer, sizeof(int), 1024, pCurrFile)) != 0) {
+        fwrite(buffer, sizeof(int), len, pDestFile);
     }
 
-    fclose(destFile_p);
-    fclose(currFile_p);
+    fclose(pCurrFile);
+    fclose(pDestFile);
+    printf("拷贝文件成功！");
+    //拷贝文件成功！
 }
 
 void testEncryptFile() {
-    char *currFile = "/Users/drawf/Desktop/c.txt";
-    char *encryptedFile = "/Users/drawf/Desktop/c_encrypted.txt";
 
-    FILE *currFile_p = fopen(currFile, "rb");
-    FILE *encryptedFile_p = fopen(encryptedFile, "wb");
+    char *currFile = "/Users/drawf/Desktop/test.txt";
+    char *encryptedFile = "/Users/drawf/Desktop/test_encrypted.txt";
+
+    FILE *pCurrFile = fopen(currFile, "rb");
+    FILE *pEncryptedFile = fopen(encryptedFile, "wb");
 
     int buffer;
-    while ((buffer = fgetc(currFile_p)) != EOF) {
-        fputc(buffer ^ 8, encryptedFile_p);
+    while ((buffer = fgetc(pCurrFile)) != EOF) {
+        fputc(buffer ^ 8, pEncryptedFile);
     }
 
-    fclose(encryptedFile_p);
-    fclose(currFile_p);
+    fclose(pEncryptedFile);
+    fclose(pCurrFile);
+    printf("文件加密成功！");
+    //文件加密成功！
 }
 
 void testDecryptFile() {
-    char *encryptedFile = "/Users/drawf/Desktop/c_encrypted.txt";
-    char *decryptedFile = "/Users/drawf/Desktop/c_decrypted.txt";
 
-    FILE *encryptedFile_p = fopen(encryptedFile, "rb");
-    FILE *decryptedFile_p = fopen(decryptedFile, "wb");
+    char *encryptedFile = "/Users/drawf/Desktop/test_encrypted.txt";
+    char *decryptedFile = "/Users/drawf/Desktop/test_decrypted.txt";
+
+    FILE *pEncryptedFile = fopen(encryptedFile, "rb");
+    FILE *pDecryptedFile = fopen(decryptedFile, "wb");
 
     int buffer;
-    while ((buffer = fgetc(encryptedFile_p)) != EOF) {
-        fputc(buffer ^ 8, decryptedFile_p);
+    while ((buffer = fgetc(pEncryptedFile)) != EOF) {
+        fputc(buffer ^ 8, pDecryptedFile);
     }
 
-    fclose(decryptedFile_p);
-    fclose(encryptedFile_p);
+    fclose(pDecryptedFile);
+    fclose(pEncryptedFile);
+    printf("文件解密成功！");
+    //文件解密成功！
 }
 
-void testFileSize() {
-    char *currFile = "/Users/drawf/Desktop/c.txt";
-    FILE *p = fopen(currFile, "r");
+void testGetFileSize() {
 
-    fseek(p, 0l, SEEK_END);
-    long size = ftell(p);
+    char *currFile = "/Users/drawf/Desktop/test.txt";
+    FILE *pFILE = fopen(currFile, "r");
 
-    printf("文件大小：%ld byte\n", size);
+    //重新定位文件指针，0是文件指针的偏移量，SEEK_END文件末尾
+    fseek(pFILE, 0l, SEEK_END);
+    //返回当前的文件指针，相对于文件开头的位移量
+    long size = ftell(pFILE);
+    fclose(pFILE);
 
-    fclose(p);
+    printf("文件大小：%ld bytes\n", size);
+    //文件大小：21 bytes
 }
 
-
+//预定义一个常量
 #define MAX 100
 #define NAME "bob"
 
-void testMax() {
+void testDefineConstant() {
     int i = 99;
     if (i < MAX) {
-        printf("i<Max");
+        printf("结果：i<Max\n");
     }
 
-    printf("%s", NAME);
+    printf("结果：%s\n", NAME);
+    //结果：i<Max
+    //结果：bob
 }
+
+//预定义宏函数，来简化很长的函数名称
+#define jni(NAME) _jni_define_func_##NAME()//用 NAME 来替换 ##NAME
 
 void _jni_define_func_write() {
     printf("write\n");
@@ -797,29 +819,9 @@ void _jni_define_func_read() {
     printf("read\n");
 }
 
-#define jni(NAME) _jni_define_func_##NAME()
-
-void testJni() {
-
+void testDefineFunc() {
     jni(write);
     jni(read);
-}
-
-#define LOG(LEVEL, FORMAT, ...) printf(#LEVEL);printf(#FORMAT,__VA_ARGS__);
-#define LOGI(FORMAT, ...) LOG("INFO:",#FORMAT,__VA_ARGS__);
-#define LOGE(FORMAT, ...) LOG("ERROR:",#FORMAT,__VA_ARGS__);
-#define LOGW(FORMAT, ...) LOG("WARN:",#FORMAT,__VA_ARGS__);
-
-#define ABC(LEVEL) printf(#LEVEL)
-
-
-void testLog() {
-//    ABC("info");
-
-//    LOG("abc:", "%s", "sjakdf");
-
-//    LOGI("%s", "就哭了jkl")
-    LOGE("%d", 1242)
 }
 
 int main() {
@@ -868,49 +870,7 @@ int main() {
 
 //    testUnion();
 
-    testEnum();
-//====================
-//    printf("res:%d", add(2, 5));
-
-//    int i = 90;
-//    printf("i 的内存地址：%#x\n", &i);
-//    testChangeNum(&i);
-//    printf("i 的值：%d", i);
-
-//    testPointers();
-
-//    testFuncPointer();
-
-//    testFuncPointer1(&add, 3, 5);
-//    testFuncPointer1(minus, 3, 5);
-
-//    requestNet("www.baidu.com", netCallBack);
-
-//    testCharArray();
-
-//    testCharPointer();
-
-//    testSpliceString();
-
-//    testQueryChar();
-
-//    testQueryString();
-
-//    testStrToInt();
-
-//    testStruct();
-
-//    testStruct2();
-
-//    testStruct3();
-
-//    testStructArr();
-
-//    testStructMalloc();
-
-//    testDogWow();
-
-//    testAlias();
+//    testEnum();
 
 //    testWriteTextFile();
 
@@ -922,14 +882,11 @@ int main() {
 
 //    testDecryptFile();
 
-//    testFileSize();
+//    testGetFileSize();
 
-//    testUnion();
+//    testDefineConstant();
 
-//    testMax();
+    testDefineFunc();
 
-//    testJni();
-
-//    testLog();
     return 0;
 }
